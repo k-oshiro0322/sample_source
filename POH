@@ -1,0 +1,169 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+public class Main {
+    public static void main(String args[] ) throws Exception {
+        try{
+                
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            String strdisplaySize = br.readLine();
+            String[] arystrdisplaySize = strdisplaySize.split(" ");
+            
+            //画面サイズ
+            int iDisplayHigh = Integer.valueOf(arystrdisplaySize[0]).intValue();
+            int iDisplayWigh = Integer.valueOf(arystrdisplaySize[1]).intValue() + 1;
+            
+            //空白スペースの最大値
+            int iMaxDisplayWidthSpace = 0;
+            
+            //各行の最大スペース数
+            int[] iRowMaxWidthSpace = new int[iDisplayHigh];
+            
+            //画面サイズの配置可能情報を格納する配列
+            String[][] strDisplaySpace = new String[iDisplayHigh][iDisplayWigh];
+    
+            for(int i = 0; i < iDisplayHigh ; i++){
+                String line = br.readLine();
+                String[] strDispLine = line.split("");
+                //各列の0の連続数を格納
+                iRowMaxWidthSpace[i] = 0;              
+				//0の連続数
+                String[] strLineZeroCount = line.split("1");
+
+                for(int j = 0; j < iDisplayWigh; j++){
+                    
+                    strDisplaySpace[i][j] = strDispLine[j];
+                    
+                    
+                    if(j < strLineZeroCount.length){
+                    	int iLineZeroCnt = strLineZeroCount[j].length();
+                        //System.out.println(strLineZeroCount[j]);
+                    	if(iRowMaxWidthSpace[i] < iLineZeroCnt){
+                    	
+                    		iRowMaxWidthSpace[i] = iLineZeroCnt;
+                    	    //System.out.println(iRowMaxWidthSpace[i]);
+	                    	if(iMaxDisplayWidthSpace < iLineZeroCnt){
+	                    		iMaxDisplayWidthSpace = iLineZeroCnt;
+	                    	}
+                    	}
+                    }
+                }
+            }
+            
+            //ガジェットの数
+            int iGadget = Integer.valueOf(br.readLine()).intValue();
+            
+            //ガジェットのサイズを格納する
+            String[] arystrGadgetSize;
+            
+            //画面サイズ
+            int iGadgetHigh;
+            int iGadgetWigh;
+            
+            //ガジェット数ループ
+            for(int iRow = 0; iRow < iGadget; iRow++ ){
+                arystrGadgetSize =  br.readLine().split(" ");
+                iGadgetHigh = Integer.valueOf(arystrGadgetSize[0]).intValue();
+                iGadgetWigh = Integer.valueOf(arystrGadgetSize[1]).intValue();
+                
+                //初期化
+                int iPutCnt = 0;
+                
+                //横の最大空白スペース＜ウィジェットサイズ(横)の場合は1つも配置できない。
+                if(iMaxDisplayWidthSpace < iGadgetWigh){
+                    System.out.println(0);
+                    continue;
+                }
+                
+                //画面サイズ＜ウィジェットサイズの場合は1つも配置できない。
+                if(iDisplayHigh < iGadgetHigh){
+                    System.out.println(0);
+                    continue;
+                }
+                if(iDisplayWigh < iGadgetWigh){
+                    System.out.println(0);
+                    continue;
+                }
+                
+                  
+                //最初の0の位置を検索
+                //画面数分ループ
+                for(int i = 0; i < iDisplayHigh; i++){
+                    
+                        //各行の最大空白スペース＜ウィジェットサイズ(横)の場合は1つも配置できない。
+                		if(iRowMaxWidthSpace[i] < iGadgetWigh){
+                		    //System.out.println(iRowMaxWidthSpace[i]);
+                    		continue;
+                		}
+                    for(int j = 0; j < iDisplayWigh; j++){
+                        
+                        String strParam = strDisplaySpace[i][j];
+                         if(strParam.equals("1")){
+                		    //ウィジェットが既にある。
+                            //System.out.print(strDisplaySpace[i][j]);
+                            //continue;
+                        }else{
+                            //スペースがある。
+                            //最初の0がある場所を確認
+                            int iDefaultHigh = i;
+                            int jDefaultWitdh =  j;
+                            boolean blPutFlg = true;
+                            
+                         
+                            
+                            //ガジェットのサイズ数分ループ
+                            for(int iCnt = iDefaultHigh; iCnt < iDefaultHigh + iGadgetHigh; iCnt++){
+                                for(int jCnt = jDefaultWitdh; jCnt < jDefaultWitdh + iGadgetWigh; jCnt++){
+                                    
+                                   
+                                    
+                                    if(iCnt >= iDisplayHigh){
+                                        //スペース不足
+                                        blPutFlg = false;
+                                        break;
+                                    }
+                                    if(jCnt >= iDisplayWigh){
+                                        //スペース不足
+                                        blPutFlg = false;
+                                        break;
+                                    }
+                                    
+                                    if(strDisplaySpace[iCnt][jCnt].equals("0")){
+                                        //System.out.print(Integer.toString(jCnt));
+                                        //System.out.println(strDisplaySpace[iCnt][jCnt]);
+                                    }else{
+                                        //そこが1ならば処理を抜ける。
+                                        blPutFlg = false;
+                                        break;
+                                    }
+                                }
+                                
+                                if(blPutFlg == false){
+                                    break;
+                                }
+                            }
+                            
+                            if(blPutFlg == true){
+                                iPutCnt++;
+                            }
+                            
+                        }
+                    }
+                    
+                }
+                //入る画面数
+                System.out.println(Integer.toString(iPutCnt));
+            }
+        
+            //0の位置からガジェットの大きさが入るか判定
+            
+            //成功なら+1
+            
+            //失敗なら増えない
+            
+       
+        
+        }catch(Exception e) {  
+      System.out.println("エラー" + e.getMessage());
+        }
+    }
+}
